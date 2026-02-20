@@ -1,0 +1,122 @@
+.card {
+    background: #1a202c;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #2d3748;
+    transition: border-color 0.2s;
+}
+
+.card:hover {
+    border-color: #4a5568;
+}
+
+.card.running {
+    border-left: 3px solid #48bb78;
+}
+
+.card.stopped {
+    border-left: 3px solid #fc8181;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.running .status-dot {
+    background: #48bb78;
+    box-shadow: 0 0 6px #48bb78;
+}
+
+.stopped .status-dot {
+    background: #fc8181;
+    box-shadow: 0 0 6px #fc8181;
+}
+
+.container-name {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.status-text {
+    font-size: 13px;
+    color: #a0aec0;
+}
+
+.image-text {
+    font-size: 12px;
+    color: #718096;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.restart-btn {
+    background: #2d3748;
+    color: #e2e8f0;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.restart-btn:hover {
+    background: #4a5568;
+}
+
+.restarting-badge {
+    font-size: 11px;
+    color: #f6ad55;
+    margin-left: auto;
+}
+
+.restart-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.card-header {
+    cursor: pointer;
+}
+
+.card-header:hover .container-name {
+    color: #90cdf4;
+}
+
+.stop-btn {
+    background: #3d1515;
+    color: #fc8181;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-right: auto;
+}
+
+.stop-btn:hover {
+    background: #5c1f1f;
+}
