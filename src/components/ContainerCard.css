@@ -1,122 +1,153 @@
 .card {
-    background: #1a202c;
-    border-radius: 12px;
-    padding: 16px;
-    border: 1px solid #2d3748;
-    transition: border-color 0.2s;
+    background: #141820;
+    border-radius: 4px;
+    padding: 14px 16px;
+    border: 1px solid #1e2535;
+    border-left: 2px solid #1e2535;
+    transition: border-color 0.15s, background 0.15s;
+    cursor: pointer;
 }
 
 .card:hover {
-    border-color: #4a5568;
+    background: #1a2035;
+    border-color: #2d3748;
 }
 
 .card.running {
-    border-left: 3px solid #48bb78;
+    border-left-color: #276749;
 }
 
 .card.stopped {
-    border-left: 3px solid #fc8181;
+    border-left-color: #742a2a;
 }
 
 .card-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 8px;
+    margin-bottom: 10px;
 }
 
 .status-dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
+    flex-shrink: 0;
 }
 
 .running .status-dot {
     background: #48bb78;
-    box-shadow: 0 0 6px #48bb78;
+    box-shadow: 0 0 6px #48bb7860;
 }
 
 .stopped .status-dot {
     background: #fc8181;
-    box-shadow: 0 0 6px #fc8181;
+    box-shadow: 0 0 6px #fc818160;
 }
 
 .container-name {
+    font-size: 12px;
     font-weight: 600;
-    font-size: 15px;
+    letter-spacing: 0.03em;
+    color: #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card:hover .container-name {
+    color: #90cdf4;
 }
 
 .card-body {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 .status-text {
-    font-size: 13px;
-    color: #a0aec0;
+    font-size: 11px;
+    color: #718096;
+    letter-spacing: 0.02em;
+}
+
+.running .status-text {
+    color: #68d391;
+}
+
+.stopped .status-text {
+    color: #fc8181;
 }
 
 .image-text {
-    font-size: 12px;
-    color: #718096;
+    font-size: 10px;
+    color: #4a5568;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    letter-spacing: 0.02em;
+}
+
+.last-seen {
+    font-size: 10px;
+    color: #2d3748;
+    letter-spacing: 0.02em;
 }
 
 .card-footer {
     display: flex;
     justify-content: flex-end;
-}
-
-.restart-btn {
-    background: #2d3748;
-    color: #e2e8f0;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.restart-btn:hover {
-    background: #4a5568;
-}
-
-.restarting-badge {
-    font-size: 11px;
-    color: #f6ad55;
-    margin-left: auto;
-}
-
-.restart-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.card-header {
-    cursor: pointer;
-}
-
-.card-header:hover .container-name {
-    color: #90cdf4;
+    gap: 6px;
 }
 
 .stop-btn {
-    background: #3d1515;
+    background: transparent;
     color: #fc8181;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 13px;
+    border: 1px solid #742a2a;
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-size: 9px;
+    font-family: inherit;
+    letter-spacing: 0.08em;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.15s;
     margin-right: auto;
 }
 
 .stop-btn:hover {
-    background: #5c1f1f;
+    background: #2d1010;
+}
+
+.restart-btn {
+    background: transparent;
+    color: #a0aec0;
+    border: 1px solid #2d3748;
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-size: 9px;
+    font-family: inherit;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.restart-btn:hover {
+    background: #1a2035;
+    border-color: #4a5568;
+    color: #e2e8f0;
+}
+
+.restart-btn:disabled,
+.stop-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.restarting-badge {
+    font-size: 9px;
+    color: #f6ad55;
+    letter-spacing: 0.08em;
+    margin-left: auto;
+    align-self: center;
 }
