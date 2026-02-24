@@ -9,8 +9,26 @@
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 16px;
+}
+
+@media (min-width: 1200px) {
+    .grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (min-width: 900px) and (max-width: 1199px) {
+    .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 600px) and (max-width: 899px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 600px) {
