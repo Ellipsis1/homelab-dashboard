@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import ContainerGrid from './components/ContainerGrid'
 import ContainerDetail from './components/ContainerDetail'
 import './App.css'
 import {API_BASE} from "./config.js";
+import Reports from './components/Reports'
 
 function App() {
+    const navigate = useNavigate()
     const [containers, setContainers] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -34,11 +36,15 @@ function App() {
     return (
         <div className="app">
             <header className="header">
-                <h1>HomeLab Monitor</h1>
-                <div className="header-stats">
-          <span className={runningCount === containers.length ? 'stat-good' : 'stat-warn'}>
-            {runningCount}/{containers.length} running
-          </span>
+                <h1> HomeLab Monitor</h1>
+                <span className="subtitle">Raspberry Pi 5</span>
+                <div className="header-nav">
+                    <span className={runningCount === containers.length ? 'stat-good' : 'stat-warn'}>
+                      {runningCount}/{containers.length} running
+                    </span>
+                    <button className="nav-btn" onClick={() => navigate('/reports')}>
+                        Reports
+                    </button>
                 </div>
             </header>
             <main>
@@ -46,6 +52,7 @@ function App() {
                     <p className="loading">Connecting to Docker...</p>
                 ) : (
                     <Routes>
+                        <Route path="/reports" element={<Reports />} />
                         <Route path="/" element={<ContainerGrid containers={containers} />} />
                         <Route path="/containers/:name" element={<ContainerDetail />} />
                     </Routes>

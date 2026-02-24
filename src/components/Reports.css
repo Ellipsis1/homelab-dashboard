@@ -1,0 +1,137 @@
+.reports {
+    max-width: 900px;
+}
+
+.reports h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.calendar {
+    background: #1a202c;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #2d3748;
+    margin-bottom: 16px;
+}
+
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.day-label {
+    text-align: center;
+    font-size: 12px;
+    color: #718096;
+    padding: 4px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.day-cell {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    transition: transform 0.1s;
+    background: #2d3748;
+}
+
+.day-cell.has-data {
+    cursor: pointer;
+}
+
+.day-cell.has-data:hover {
+    transform: scale(1.05);
+}
+
+.day-cell.empty {
+    background: transparent;
+}
+
+.day-cell.today {
+    outline: 2px solid #90cdf4;
+}
+
+.day-number {
+    font-size: 13px;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+.day-uptime {
+    font-size: 10px;
+    color: #1a202c;
+    font-weight: 700;
+}
+
+.legend {
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+    color: #a0aec0;
+    margin-bottom: 24px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.legend-dot.green { background: #48bb78; }
+.legend-dot.yellow { background: #f6ad55; }
+.legend-dot.red { background: #fc8181; }
+.legend-dot.gray { background: #2d3748; }
+
+.day-detail {
+    background: #1a202c;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #2d3748;
+}
+
+.day-detail h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #a0aec0;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.report-table th {
+    text-align: left;
+    padding: 8px 12px;
+    color: #718096;
+    border-bottom: 1px solid #2d3748;
+}
+
+.report-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #1a202c;
+}
+
+.report-table td.green { color: #48bb78; }
+.report-table td.red { color: #fc8181; }
