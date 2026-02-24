@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import './ContainerDetail.css'
 import { useContainerActions } from '../hooks/useContainerActions'
-import { API_BASE } from '../config'
+import { API_BASE, SERVICE_URLS } from '../config'
 
 function ContainerDetail() {
     const { name } = useParams()
@@ -80,6 +80,16 @@ function ContainerDetail() {
             </button>
 
             <div className="detail-header">
+                {SERVICE_URLS[name] && (
+                    <a
+                        href={SERVICE_URLS[name]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="service-link"
+                    >
+                        Open {name} →
+                    </a>
+                )}
                 <div className={`detail-dot ${isRunning ? 'running' : 'stopped'}`} />
                 <h2>{name}</h2>
                 <span className={`detail-status ${isRunning ? 'running' : 'stopped'}`}>

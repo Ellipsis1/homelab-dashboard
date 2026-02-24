@@ -179,3 +179,19 @@
         text-align: center;
     }
 }
+
+.service-link {
+    margin-left: auto;
+    font-size: 13px;
+    color: #90cdf4;
+    text-decoration: none;
+    padding: 4px 10px;
+    border: 1px solid #90cdf4;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.service-link:hover {
+    background: #90cdf4;
+    color: #1a202c;
+}
