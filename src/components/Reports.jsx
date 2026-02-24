@@ -21,11 +21,16 @@ function Reports() {
     useEffect(() => {
         const fetchReports = async () => {
             try {
-                const start = `${year}-${String(month + 1).padStart(2, '0')}-01`
-                const end = `${year}-${String(month + 1).padEnd(2, '0')}-${String(daysInMonth).padStart(2, '0')}`
+                const monthStr = String(month + 1).padStart(2, '0')
+                const start = `${year}-${monthStr}-01`
+                const end = `${year}-${monthStr}-${String(daysInMonth).padStart(2, '0')}`
                 const response = await fetch(`api/reports?start=${start}&end=${end}`)
                 const data = await response.json()
-                setReports(data)
+                if (Array.isArray(data)) {
+                    setReports(data)
+                } else {
+                    setReports([])
+                }
                 setLoading(false)
             } catch (error) {
                 console.error('Failed to fetch reports', error)
@@ -57,7 +62,7 @@ function Reports() {
         const dayReports = reports.filter(r => r.reportDate === dateStr)
         if (dayReports.length > 0) setSelectedDate({ date: dateStr, reports: dayReports })
     }
-    
+
     return (
         <div className="reports">
             <button className="back-btn" onClick={() => navigate('/')}>← Back</button>
