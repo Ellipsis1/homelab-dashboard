@@ -1,17 +1,16 @@
-import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import './Reports.css'
 
 function Reports() {
-    const navigate = useNavigate();
-    const [reports, setReports] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [selectedDate, setSelectedDate] = useState(null);
+    const navigate = useNavigate()
+    const [reports, setReports] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [selectedDate, setSelectedDate] = useState(null)
 
-    const today = new Date();
-    const year = today.getFullYear();
+    const today = new Date()
+    const year = today.getFullYear()
     const month = today.getMonth()
-
-    // Get all days in current month
     const daysInMonth = new Date(year, month + 1, 0).getDate()
     const firstDayOfMonth = new Date(year, month, 1).getDay()
 
@@ -24,121 +23,163 @@ function Reports() {
                 const monthStr = String(month + 1).padStart(2, '0')
                 const start = `${year}-${monthStr}-01`
                 const end = `${year}-${monthStr}-${String(daysInMonth).padStart(2, '0')}`
-                const response = await fetch(`api/reports?start=${start}&end=${end}`)
+                const response = await fetch(`/api/reports?start=${start}&end=${end}`)
                 const data = await response.json()
-                if (Array.isArray(data)) {
-                    setReports(data)
-                } else {
-                    setReports([])
-                }
+                setReports(Array.isArray(data) ? data : [])
                 setLoading(false)
             } catch (error) {
-                console.error('Failed to fetch reports', error)
+                console.error('Failed to fetch reports:', error)
                 setLoading(false)
             }
         }
-
         fetchReports()
     }, [])
 
-    // Get average uptime for a specific date
     const getDateUptime = (day) => {
-        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padEnd(2, '0')}`
+        const monthStr = String(month + 1).padStart(2, '0')
+        const dateStr = `${year}-${monthStr}-${String(day).padStart(2, '0')}`
         const dayReports = reports.filter(r => r.reportDate === dateStr)
         if (dayReports.length === 0) return null
-        const avg = dayReports.reduce((sum, r) => sum + r.uptimePercentage, 0) / dayReports.length
-        return avg
+        return dayReports.reduce((sum, r) => sum + r.uptimePercentage, 0) / dayReports.length
     }
 
     const getDateColor = (uptime) => {
-        if (uptime === null) return '#2d3748'
-        if (uptime === 100) return '#48bb78'
-        if (uptime >= 90) return '#f6ad55'
-        return '#fc8181'
+        if (uptime === null) return null
+        if (uptime === 100) return 'cell-green'
+        if (uptime >= 90) return 'cell-yellow'
+        return 'cell-red'
     }
 
     const handleDayClick = (day) => {
-        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+        const monthStr = String(month + 1).padStart(2, '0')
+        const dateStr = `${year}-${monthStr}-${String(day).padStart(2, '0')}`
         const dayReports = reports.filter(r => r.reportDate === dateStr)
         if (dayReports.length > 0) setSelectedDate({ date: dateStr, reports: dayReports })
     }
 
-    return (
-        <div className="reports">
-            <button className="back-btn" onClick={() => navigate('/')}>← Back</button>
+    const overallUptime = reports.length > 0
+        ? (reports.reduce((sum, r) => sum + r.uptimePercentage, 0) / reports.length).toFixed(2)
+        : null
 
-            <h2>{monthNames[month]} {year} — Uptime Report</h2>
+    const totalIncidents = reports.reduce((sum, r) => sum + r.incidentCount, 0)
+
+    return (
+        <div className="reports-page">
+            <div className="reports-topbar">
+                <button className="back-btn" onClick={() => navigate('/')}>← Dashboard</button>
+                <div className="reports-title">
+                    <span className="reports-label">UPTIME REPORT</span>
+                    <span className="reports-period">{monthNames[month].toUpperCase()} {year}</span>
+                </div>
+                <div className="reports-stats">
+                    {overallUptime && (
+                        <>
+                            <div className="stat-chip">
+                                <span className="stat-chip-label">AVG UPTIME</span>
+                                <span className={`stat-chip-value ${parseFloat(overallUptime) === 100 ? 'green' : 'yellow'}`}>
+                  {overallUptime}%
+                </span>
+                            </div>
+                            <div className="stat-chip">
+                                <span className="stat-chip-label">INCIDENTS</span>
+                                <span className={`stat-chip-value ${totalIncidents === 0 ? 'green' : 'red'}`}>
+                  {totalIncidents}
+                </span>
+                            </div>
+                            <div className="stat-chip">
+                                <span className="stat-chip-label">SERVICES</span>
+                                <span className="stat-chip-value">{new Set(reports.map(r => r.containerName)).size}</span>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
 
             {loading ? (
-                <p className="loading">Loading reports...</p>
+                <div className="loading-state">
+                    <div className="loading-bar" />
+                    <span>Fetching report data...</span>
+                </div>
             ) : (
-                <>
-                    <div className="calendar">
-                        <div className="calendar-header">
-                            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
-                                <div key={d} className="day-label">{d}</div>
-                            ))}
+                <div className="reports-body">
+                    <div className="calendar-panel">
+                        <div className="panel-header">
+                            <span className="panel-title">DAILY UPTIME HEATMAP</span>
+                            <div className="legend">
+                                <span className="legend-item"><span className="legend-dot green" />100%</span>
+                                <span className="legend-item"><span className="legend-dot yellow" />90-99%</span>
+                                <span className="legend-item"><span className="legend-dot red" />&lt;90%</span>
+                                <span className="legend-item"><span className="legend-dot empty" />No data</span>
+                            </div>
                         </div>
-                        <div className="calendar-grid">
-                            {Array.from({ length: firstDayOfMonth }).map((_, i) => (
-                                <div key={`empty-${i}`} className="day-cell empty" />
-                            ))}
-                            {Array.from({ length: daysInMonth }).map((_, i) => {
-                                const day = i + 1
-                                const uptime = getDateUptime(day)
-                                const isToday = day === today.getDate()
-                                return (
-                                    <div
-                                        key={day}
-                                        className={`day-cell ${uptime !== null ? 'has-data' : ''} ${isToday ? 'today' : ''}`}
-                                        style={{ backgroundColor: getDateColor(uptime) }}
-                                        onClick={() => handleDayClick(day)}
-                                    >
-                                        <span className="day-number">{day}</span>
-                                        {uptime !== null && (
-                                            <span className="day-uptime">{uptime.toFixed(0)}%</span>
-                                        )}
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    </div>
 
-                    <div className="legend">
-                        <span className="legend-item"><span className="legend-dot green" />100% uptime</span>
-                        <span className="legend-item"><span className="legend-dot yellow" />90-99% uptime</span>
-                        <span className="legend-item"><span className="legend-dot red" />Below 90%</span>
-                        <span className="legend-item"><span className="legend-dot gray" />No data</span>
+                        <div className="calendar">
+                            <div className="calendar-header">
+                                {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(d => (
+                                    <div key={d} className="day-label">{d}</div>
+                                ))}
+                            </div>
+                            <div className="calendar-grid">
+                                {Array.from({ length: firstDayOfMonth }).map((_, i) => (
+                                    <div key={`empty-${i}`} className="day-cell empty" />
+                                ))}
+                                {Array.from({ length: daysInMonth }).map((_, i) => {
+                                    const day = i + 1
+                                    const uptime = getDateUptime(day)
+                                    const colorClass = getDateColor(uptime)
+                                    const isToday = day === today.getDate()
+                                    return (
+                                        <div
+                                            key={day}
+                                            className={`day-cell ${colorClass || 'no-data'} ${isToday ? 'today' : ''} ${uptime !== null ? 'clickable' : ''}`}
+                                            onClick={() => handleDayClick(day)}
+                                        >
+                                            <span className="day-number">{day}</span>
+                                            {uptime !== null && (
+                                                <span className="day-uptime">{uptime.toFixed(0)}%</span>
+                                            )}
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
                     </div>
 
                     {selectedDate && (
-                        <div className="day-detail">
-                            <h3>{selectedDate.date}</h3>
+                        <div className="detail-panel">
+                            <div className="panel-header">
+                                <span className="panel-title">SERVICES — {selectedDate.date}</span>
+                                <button className="close-btn" onClick={() => setSelectedDate(null)}>✕</button>
+                            </div>
                             <table className="report-table">
                                 <thead>
                                 <tr>
-                                    <th>Container</th>
-                                    <th>Uptime</th>
-                                    <th>Snapshots</th>
-                                    <th>Incidents</th>
+                                    <th>SERVICE</th>
+                                    <th>UPTIME</th>
+                                    <th>SNAPSHOTS</th>
+                                    <th>INCIDENTS</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {selectedDate.reports.map(r => (
-                                    <tr key={r.id}>
-                                        <td>{r.containerName}</td>
-                                        <td className={r.uptimePercentage === 100 ? 'green' : 'red'}>
-                                            {r.uptimePercentage}%
-                                        </td>
-                                        <td>{r.totalSnapshots}</td>
-                                        <td>{r.incidentCount}</td>
-                                    </tr>
-                                ))}
+                                {selectedDate.reports
+                                    .sort((a, b) => a.containerName.localeCompare(b.containerName))
+                                    .map(r => (
+                                        <tr key={r.id}>
+                                            <td className="service-name">{r.containerName}</td>
+                                            <td>
+                          <span className={`uptime-badge ${r.uptimePercentage === 100 ? 'badge-green' : r.uptimePercentage >= 90 ? 'badge-yellow' : 'badge-red'}`}>
+                            {r.uptimePercentage}%
+                          </span>
+                                            </td>
+                                            <td className="mono">{r.totalSnapshots.toLocaleString()}</td>
+                                            <td className={r.incidentCount > 0 ? 'incident-count' : 'mono'}>{r.incidentCount}</td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>
                     )}
-                </>
+                </div>
             )}
         </div>
     )
